@@ -1,8 +1,14 @@
 # Azure Enterprise Platform
 
-Production-style Azure infrastructure lab built with Terraform, GitHub Actions and Azure OIDC.
+[![Terraform CI](https://github.com/ispartaliemir32/azure-enterprise-platform/actions/workflows/terraform-ci.yml/badge.svg)](https://github.com/ispartaliemir32/azure-enterprise-platform/actions/workflows/terraform-ci.yml)
+[![Terraform Plan](https://github.com/ispartaliemir32/azure-enterprise-platform/actions/workflows/terraform-plan.yml/badge.svg)](https://github.com/ispartaliemir32/azure-enterprise-platform/actions/workflows/terraform-plan.yml)
+![Terraform](https://img.shields.io/badge/Terraform-Infrastructure%20as%20Code-7B42BC?logo=terraform)
+![Azure](https://img.shields.io/badge/Microsoft%20Azure-Cloud-0078D4?logo=microsoftazure)
+![Kubernetes](https://img.shields.io/badge/Kubernetes-AKS-326CE5?logo=kubernetes)
 
-> Portfolio project: designed to demonstrate enterprise Azure, networking, security, IaC and CI/CD skills. It uses generic demo values and contains no employer code, credentials or tenant-specific data.
+Production-style Azure infrastructure lab built with **Terraform, GitHub Actions, Azure OIDC and Kubernetes**.
+
+> Portfolio project designed to demonstrate enterprise Azure, networking, security, IaC and CI/CD skills. It uses generic demo values and contains no employer code, credentials or tenant-specific data.
 
 ## Architecture
 
@@ -32,7 +38,7 @@ flowchart LR
 
 ## What this repository demonstrates
 
-- Terraform modules and reusable infrastructure-as-code
+- Reusable Terraform modules and infrastructure-as-code practices
 - Separate `dev` and `prod` environments
 - Azure Virtual Network and isolated subnets
 - Azure Kubernetes Service with managed identity
@@ -41,8 +47,21 @@ flowchart LR
 - Azure Database for PostgreSQL Flexible Server
 - Log Analytics monitoring
 - GitHub Actions CI for formatting, validation and security scanning
-- GitHub OIDC workflow for Azure authentication without long-lived secrets
+- GitHub OIDC for Azure authentication without long-lived client secrets
 - Naming, tagging and environment separation
+
+## Enterprise design choices
+
+| Area | Design choice |
+|---|---|
+| Identity | Managed identities and GitHub OIDC |
+| Secrets | Azure Key Vault instead of credentials in code |
+| Network | Isolated subnets and restricted service access |
+| Compute | AKS with managed identity and network policy |
+| Data | PostgreSQL Flexible Server with public access disabled |
+| Delivery | GitHub Actions for validation and Terraform plan |
+| Environments | Isolated development and production configuration |
+| Security | Trivy scanning and least-privilege workflow permissions |
 
 ## Repository layout
 
@@ -68,29 +87,29 @@ flowchart LR
 
 ## Quick start
 
-### 1. Prerequisites
+### Prerequisites
 
 - Terraform 1.8+
 - Azure CLI
 - An Azure subscription
 
-### 2. Login locally
+### Login locally
 
 ```bash
 az login
 az account set --subscription "<SUBSCRIPTION_ID>"
 ```
 
-### 3. Configure the dev environment
+### Configure the development environment
 
 ```bash
 cd envs/dev
 cp terraform.tfvars.example terraform.tfvars
 ```
 
-Edit `terraform.tfvars` and set your subscription ID and PostgreSQL administrator password.
+Edit `terraform.tfvars` and provide your own lab values. Never commit credentials or secrets.
 
-### 4. Validate before deploying
+### Validate before deploying
 
 ```bash
 terraform init
@@ -99,7 +118,7 @@ terraform validate
 terraform plan
 ```
 
-### 5. Deploy
+### Deploy
 
 ```bash
 terraform apply
@@ -109,7 +128,7 @@ terraform apply
 
 ## GitHub Actions + Azure OIDC
 
-The repository includes an OIDC-based Terraform workflow. In GitHub repository settings, add these **Repository Variables**:
+The repository includes an OIDC-based Terraform workflow. Configure these **Repository Variables** in GitHub:
 
 - `AZURE_CLIENT_ID`
 - `AZURE_TENANT_ID`
@@ -117,7 +136,7 @@ The repository includes an OIDC-based Terraform workflow. In GitHub repository s
 
 No Azure client secret is required when workload identity federation is configured correctly.
 
-See [`docs/github-oidc.md`](docs/github-oidc.md) for the Azure setup.
+See [`docs/github-oidc.md`](docs/github-oidc.md) for setup details.
 
 ## Security choices
 
@@ -127,19 +146,25 @@ See [`docs/github-oidc.md`](docs/github-oidc.md) for the Azure setup.
 - AKS uses managed identity
 - Kubernetes local accounts are disabled
 - Network Policy is enabled for AKS
-- GitHub Actions has least-privilege workflow permissions
+- GitHub Actions uses least-privilege workflow permissions
 - Terraform files are scanned with Trivy in CI
 
-## Portfolio talking points
+## Interview / portfolio talking points
 
-This project can be used to discuss:
+This project is useful for discussing:
 
 1. Why infrastructure is split into reusable Terraform modules.
 2. How development and production remain isolated.
 3. Why OIDC is safer than storing Azure client secrets in GitHub.
-4. How private networking limits direct access to data services.
+4. How private networking reduces direct exposure of data services.
 5. How managed identities reduce credential management.
 6. How CI catches formatting, validation and security issues before deployment.
+7. How the same design can evolve toward GitOps and policy-as-code.
+
+## Documentation
+
+- [Architecture](docs/architecture.md)
+- [GitHub OIDC setup](docs/github-oidc.md)
 
 ## Important
 
