@@ -166,6 +166,11 @@ This project is useful for discussing:
 - [Architecture](docs/architecture.md)
 - [GitHub OIDC setup](docs/github-oidc.md)
 
+## Related projects
+
+- [Cloud Security Lab](https://github.com/ispartaliemir32/cloud-security-lab): Sentinel and KQL detections for Entra ID and Azure Activity, including RBAC and resource-group monitoring
+- [Entra & Intune Automation](https://github.com/ispartaliemir32/entra-intune-automation): read-only identity and device reporting with PowerShell and Microsoft Graph
+
 ## Important
 
 This is a portfolio/lab architecture, not a drop-in production baseline. A real production platform should additionally include organization-specific policies, budgets, private DNS, backup requirements, disaster recovery, SIEM integration, approval gates and platform governance.
